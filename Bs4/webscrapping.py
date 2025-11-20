@@ -12,7 +12,7 @@ def product_info(product_name):
                 "Accept-Language": "en-US,en;q=0.9"
             }
 
-        response = requests.get(url,headers=headers, timeout=5)
+        response = requests.post(url,headers=headers, timeout=60)
         
         if response.status_code != 200:
             return None
