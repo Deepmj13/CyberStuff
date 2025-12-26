@@ -111,7 +111,7 @@ def dir_scan(url):
 def check_xss(url):
     test_url = f"{url}?q={XSS_payload}"
     try :
-        r.request.get(test_url,timeout=TimeOut)
+        r = requests.get(test_url,timeout=TimeOut)
         if XSS_payload in r.text:
             return True
     except requests.RequestException:
@@ -124,7 +124,7 @@ def check_xss(url):
 def check_sql(url):
     test_url = f"{url}?id{sqli_payload}"
     try:
-        r.request.get(test_url,TimeOut)
+        r = requests.get(test_url,TimeOut)
         error_signatures = [
             "sql syntax",
             "mysql",
@@ -160,11 +160,11 @@ def scan_web(target_url):
         return
 
 
-    missing_headers = web_headers_scan(target_url)
+    missing_headers = web_headers_scan(response)
     if missing_headers:
         print("Missing Security Headers")
         for i in missing_headers:
-            print(i)
+            print("           " + i)
     else:
         print("Present All headers")
 
@@ -172,17 +172,17 @@ def scan_web(target_url):
     if dirs:
         print("Found Directories")
         for i in dirs:
-            print(i)
+            print("           " + i)
     else:
         print("Not Dirs")
 
         
-    if check_xss():
+    if check_xss(target_url):
         print("POssible refleted XSS detect")
     else:
         print("no detection")
 
-    if check_sql():
+    if check_sql(target_url):
         print("Possible injection")
     else:
         print("Prevented injections")
